@@ -54,7 +54,7 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products, title }) 
               </Link>
               
               <button 
-                onClick={() => dispatch(addToCart(product))}
+                onClick={() => (handleAddToCart(product))}
                 className="absolute bottom-0 left-0 right-0 bg-black text-white py-4 text-[10px] font-bold tracking-[0.2em] uppercase translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out flex items-center justify-center gap-2 hover:bg-zinc-800"
               >
                 <Plus size={14} /> Quick Add
