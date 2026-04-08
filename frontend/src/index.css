@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Oswald', sans-serif;
+  
+  --color-rs-black: #000000;
+  --color-rs-white: #ffffff;
+  --color-rs-gray-light: #f9f9f9;
+  --color-rs-border: #eeeeee; /* Màu đường kẻ rất nhạt */
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-rs-white);
+  color: var(--color-rs-black);
+  -webkit-font-smoothing: antialiased;
+}
+
+.nav-link {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
