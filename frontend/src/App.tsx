@@ -2,15 +2,19 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
 import Home from './pages/Home';
-import ProductDetail from './pages/ProductDetail'; 
+import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
 import Vinyl from './pages/Vinyl';
 import Checkout from './pages/Checkout';
-import Login from './pages/Login';
-import { Toaster } from 'react-hot-toast';
+import User from './pages/User';
 import Merch from './pages/Merch';
 import CD from './pages/CD';
+import Contact from './pages/Contact';
+import ShippingReturns from './pages/ShippingReturns';
+import FAQ from './pages/FAQ';
+import OrderSuccess from './pages/OrderSuccess';
 import ScrollToTop from './components/ScrollToTop';
+import { Toaster } from 'react-hot-toast';
 
 const App: React.FC = () => {
   return (
@@ -21,12 +25,16 @@ const App: React.FC = () => {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
           <Route path="vinyl" element={<Vinyl />} />
+          <Route path="cd" element={<CD />} />
+          <Route path="merch" element={<Merch />} />
           <Route path="product/:id" element={<ProductDetail />} />
           <Route path="cart" element={<Cart />} />
-          <Route path="account" element={<Login />} />
           <Route path="checkout" element={<Checkout />} />
-          <Route path="merch" element={<Merch />} />
-          <Route path="cd" element={<CD />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="shipping-returns" element={<ShippingReturns />} />
+          <Route path="faq" element={<FAQ />} />
+          <Route path="order-success" element={<OrderSuccess />} />
+          <Route path="account" element={<User />} />
         </Route>
       </Routes>
     </Router>

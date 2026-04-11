@@ -1,16 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import FeaturedProducts from '../components/FeaturedProducts';
-import type { Product } from '../types';
-
-const mockProducts: Product[] = [
-  { id: 1, title: "The Rise and Fall of Ziggy Stardust", artist: "David Bowie", price: 32.00, imgUrl: "https://placehold.co/600x600/ffffff/000000?text=Bowie" },
-  { id: 2, title: "Midnights", artist: "Taylor Swift", price: 38.50, imgUrl: "https://placehold.co/600x600/ffffff/000000?text=Midnights" },
-  { id: 3, title: "Blue Train", artist: "John Coltrane", price: 28.00, imgUrl: "https://placehold.co/600x600/ffffff/000000?text=Coltrane" },
-  { id: 4, title: "Swimming", artist: "Mac Miller", price: 35.00, imgUrl: "https://placehold.co/600x600/ffffff/000000?text=Swimming" },
-];
+import { VINYL_DATA } from '../data/products';
 
 const Home: React.FC = () => {
+  const featuredProducts = VINYL_DATA.slice(0, 4);
   return (
     <div className="flex flex-col w-full">
       <section className="relative h-[85vh] flex flex-col justify-center items-center text-center px-6">
@@ -28,7 +22,7 @@ const Home: React.FC = () => {
       </section>
 
       <div className="border-t border-rs-border">
-        <FeaturedProducts products={mockProducts} title="Bản phát hành mới" />
+        <FeaturedProducts products={featuredProducts} title="Bản phát hành mới" />
       </div>
     </div>
   );

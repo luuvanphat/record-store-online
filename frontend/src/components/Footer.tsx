@@ -26,9 +26,9 @@ const Footer: React.FC = () => {
         <div>
           <h4 className="font-bold uppercase tracking-wider font-display mb-6 text-sm">Hỗ trợ</h4>
           <ul className="space-y-4 text-sm text-gray-400 font-sans">
-            <li><a href="#" className="hover:text-white transition-colors">Liên hệ</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Vận chuyển & Đổi trả</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Câu hỏi thường gặp</a></li>
+            <li><Link to="/contact" className="hover:text-white transition-colors">Liên hệ</Link></li>
+            <li><Link to="/shipping-returns" className="hover:text-white transition-colors">Vận chuyển & Đổi trả</Link></li>
+            <li><Link to="/faq" className="hover:text-white transition-colors">Câu hỏi thường gặp</Link></li>
           </ul>
         </div>
       </div>

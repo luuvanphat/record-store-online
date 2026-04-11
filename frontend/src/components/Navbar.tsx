@@ -6,9 +6,9 @@ import type { RootState } from '../store';
 import type { Product } from '../types';
 
 const MOCK_DATA: Product[] = [
-  { id: 1, title: "Abbey Road", artist: "The Beatles", price: 29.99, imgUrl: "https://placehold.co/100x100/ffffff/000000?text=Beatles" },
-  { id: 2, title: "Dark Side of the Moon", artist: "Pink Floyd", price: 34.99, imgUrl: "https://placehold.co/100x100/ffffff/000000?text=Floyd" },
-  { id: 3, title: "Midnights", artist: "Taylor Swift", price: 38.50, imgUrl: "https://placehold.co/100x100/ffffff/000000?text=Swift" },
+  { id: 1, title: "Abbey Road", artist: "The Beatles", price: 29.99, imgUrl: "https://placehold.co/100x100/ffffff/000000?text=Beatles", stock: 5 },
+  { id: 2, title: "Dark Side of the Moon", artist: "Pink Floyd", price: 34.99, imgUrl: "https://placehold.co/100x100/ffffff/000000?text=Floyd", stock: 10 },
+  { id: 3, title: "Midnights", artist: "Taylor Swift", price: 38.50, imgUrl: "https://placehold.co/100x100/ffffff/000000?text=Swift", stock: 3 },
 ];
 
 const Navbar: React.FC = () => {

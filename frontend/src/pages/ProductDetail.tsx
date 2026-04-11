@@ -1,17 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../store/cartSlice';
+import { decreaseStock } from '../store/productSlice';
 import FeaturedProducts from '../components/FeaturedProducts';
-import type { Product } from '../types';
+import { ALL_PRODUCTS, getProductById } from '../data/products';
+import type { RootState } from '../store';
 import toast from 'react-hot-toast';
-
-const ALL_PRODUCTS: Product[] = [
-  { id: 1, title: "Abbey Road", artist: "The Beatles", price: 29.99, imgUrl: "https://placehold.co/800x800/f5f5f5/111?text=Abbey+Road", description: "The legendary final recording session from the Fab Four.", category: "vinyl" },
-  { id: 2, title: "Dark Side of the Moon", artist: "Pink Floyd", price: 34.99, imgUrl: "https://placehold.co/800x800/f5f5f5/111?text=Dark+Side", category: "vinyl" },
-  { id: 3, title: "Midnights", artist: "Taylor Swift", price: 38.50, imgUrl: "https://placehold.co/800x800/f5f5f5/111?text=Midnights", category: "vinyl" },
-  { id: 4, title: "Swimming", artist: "Mac Miller", price: 35.00, imgUrl: "https://placehold.co/800x800/f5f5f5/111?text=Swimming", category: "vinyl" },
-];
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -19,15 +14,33 @@ const ProductDetail: React.FC = () => {
   const [isAdded, setIsAdded] = useState(false);
 
   const currentProduct = useMemo(() => {
-    return ALL_PRODUCTS.find(p => p.id === Number(id)) || ALL_PRODUCTS[0];
+    return getProductById(Number(id)) || ALL_PRODUCTS[0];
   }, [id]);
+
+  // Get stock từ Redux store
+  const currentStock = useSelector((state: RootState) => state.products.stock[currentProduct.id] ?? currentProduct.stock);
 
   const relatedProducts = useMemo(() => {
     return ALL_PRODUCTS.filter(p => p.id !== currentProduct.id).slice(0, 4);
   }, [currentProduct.id]);
 
   const handleAddToCart = () => {
+    if (currentStock <= 0) {
+      toast.error('Sản phẩm đã hết hàng', {
+        style: {
+          borderRadius: '0px',
+          background: '#dc2626',
+          color: '#fff',
+          fontSize: '10px',
+          letterSpacing: '0.1em',
+          textTransform: 'uppercase'
+        }
+      });
+      return;
+    }
+
     dispatch(addToCart(currentProduct));
+    dispatch(decreaseStock({ id: currentProduct.id, quantity: 1 }));
     setIsAdded(true);
     
     toast.success('Đã thêm vào giỏ hàng', {
@@ -48,12 +61,17 @@ const ProductDetail: React.FC = () => {
     <div className="flex flex-col w-full">
       <div className="max-w-[1200px] mx-auto px-6 py-12 md:py-20 w-full">
         <div className="flex flex-col md:flex-row gap-10 md:gap-16">
-          <div className="w-full md:w-1/2 bg-rs-gray-light border border-rs-border overflow-hidden">
+          <div className="w-full md:w-1/2 bg-rs-gray-light border border-rs-border overflow-hidden relative">
             <img 
               src={currentProduct.imgUrl} 
               alt={currentProduct.title} 
               className="w-full h-auto object-cover hover:scale-105 transition-transform duration-700"
             />
+            {currentStock <= 0 && (
+              <div className="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center">
+                <p className="text-white text-2xl font-bold uppercase tracking-widest">Hết hàng</p>
+              </div>
+            )}
           </div>
 
           <div className="w-full md:w-1/2 flex flex-col justify-start pt-4 md:pt-8">
@@ -70,8 +88,13 @@ const ProductDetail: React.FC = () => {
               {currentProduct.artist}
             </h2>
             
-            <div className="text-2xl font-bold font-sans text-rs-black mb-10 pb-6 border-b border-rs-border">
-              ${currentProduct.price.toFixed(2)}
+            <div className="text-2xl font-bold font-sans text-rs-black mb-4 pb-6 border-b border-rs-border flex justify-between items-center">
+              <span>${currentProduct.price.toFixed(2)}</span>
+              <span className={`text-xs font-bold uppercase tracking-widest px-3 py-1 ${
+                currentStock <= 0 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
+              }`}>
+                {currentStock <= 0 ? 'Hết hàng' : `Còn ${currentStock}`}
+              </span>
             </div>
 
             <div className="mb-10">
@@ -82,14 +105,16 @@ const ProductDetail: React.FC = () => {
 
             <button 
               onClick={handleAddToCart}
-              disabled={isAdded}
+              disabled={isAdded || currentStock <= 0}
               className={`w-full py-5 uppercase tracking-[0.3em] text-[11px] font-bold transition-all duration-500 ${
-                isAdded 
+                currentStock <= 0
+                  ? 'bg-gray-300 text-gray-600 cursor-not-allowed' 
+                  : isAdded 
                   ? 'bg-green-600 text-white cursor-default' 
                   : 'bg-black text-white hover:bg-zinc-800'
               }`}
             >
-              {isAdded ? 'Đã thêm thành công' : 'Thêm vào giỏ hàng'}
+              {currentStock <= 0 ? 'Hết hàng' : isAdded ? 'Đã thêm thành công' : 'Thêm vào giỏ hàng'}
             </button>
 
             <div className="mt-12 pt-8 border-t border-rs-border">

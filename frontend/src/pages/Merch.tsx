@@ -1,17 +1,40 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import FeaturedProducts from '../components/FeaturedProducts';
-import type { Product } from '../types';
-
-const MERCH_DATA: Product[] = [
-  { id: 101, title: "Classic Logo T-Shirt", artist: "Record Store Exclusive", price: 25.00, imgUrl: "https://placehold.co/600x600/ffffff/000000?text=T-Shirt", category: 'merch' },
-  { id: 102, title: "Cotton Tote Bag", artist: "Eco-friendly", price: 15.00, imgUrl: "https://placehold.co/600x600/ffffff/000000?text=Tote+Bag", category: 'merch' },
-  { id: 103, title: "Vinyl Cleaning Kit", artist: "Premium Care", price: 20.00, imgUrl: "https://placehold.co/600x600/ffffff/000000?text=Cleaning+Kit", category: 'merch' },
-  { id: 104, title: "Slipmat Set", artist: "Turntable Essentials", price: 18.00, imgUrl: "https://placehold.co/600x600/ffffff/000000?text=Slipmat", category: 'merch' },
-  { id: 105, title: "Logo Enamel Pin", artist: "Accessories", price: 8.00, imgUrl: "https://placehold.co/600x600/ffffff/000000?text=Pin", category: 'merch' },
-  { id: 106, title: "Record Display Frame", artist: "Home Decor", price: 45.00, imgUrl: "https://placehold.co/600x600/ffffff/000000?text=Frame", category: 'merch' },
-];
+import ProductFilterBar from '../components/ProductFilterBar';
+import { MERCH_DATA } from '../data/products';
 
 const Merch: React.FC = () => {
+  const [sortOrder, setSortOrder] = useState<string>('featured');
+  const [selectedBrand, setSelectedBrand] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+
+  const filterOptions = ['all', 'Record Store Exclusive', 'Eco-friendly', 'Premium Care', 'Turntable Essentials', 'Accessories', 'Home Decor'];
+
+  const filteredProducts = useMemo(() => {
+    let result = [...MERCH_DATA];
+
+    if (searchQuery.trim()) {
+      result = result.filter((p) =>
+        p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.artist.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    if (selectedBrand !== 'all') {
+      result = result.filter((p) => p.artist === selectedBrand);
+    }
+
+    if (sortOrder === 'price-low') {
+      result.sort((a, b) => a.price - b.price);
+    } else if (sortOrder === 'price-high') {
+      result.sort((a, b) => b.price - a.price);
+    } else if (sortOrder === 'az') {
+      result.sort((a, b) => a.title.localeCompare(b.title));
+    }
+
+    return result;
+  }, [sortOrder, selectedBrand, searchQuery]);
+
   return (
     <div className="flex-grow bg-white">
       <section className="pt-20 pb-10 px-6 text-center border-b border-rs-border">
@@ -19,15 +42,25 @@ const Merch: React.FC = () => {
         <h1 className="text-5xl md:text-7xl font-bold uppercase tracking-[0.1em] font-display">Merchandise</h1>
       </section>
 
-      <div className="max-w-[1400px] mx-auto py-10">
-        <div className="px-6 mb-4 flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-gray-400">
-          <span>{MERCH_DATA.length} Sản phẩm</span>
-          <div className="flex gap-4">
-            <button className="hover:text-black transition-colors">Lọc</button>
-            <button className="hover:text-black transition-colors">Sắp xếp</button>
-          </div>
+      <div className="max-w-[1400px] mx-auto py-10 px-6">
+        <ProductFilterBar
+          searchValue={searchQuery}
+          onSearchChange={setSearchQuery}
+          sortOrder={sortOrder}
+          onSortChange={setSortOrder}
+          filterOptions={filterOptions}
+          selectedFilter={selectedBrand}
+          onFilterSelect={setSelectedBrand}
+        />
+
+        <div className="mb-20">
+          <FeaturedProducts products={filteredProducts} title="" />
+          {filteredProducts.length === 0 && (
+            <div className="text-center py-20 text-[11px] uppercase tracking-[0.2em] text-gray-400">
+              Không tìm thấy sản phẩm phù hợp.
+            </div>
+          )}
         </div>
-        <FeaturedProducts products={MERCH_DATA} title="" />
       </div>
 
       <section className="bg-rs-gray-light py-20 px-6 mt-10">

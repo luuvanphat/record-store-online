@@ -6,6 +6,7 @@ export interface Product {
   imgUrl: string;
   description?: string;
   category?: 'vinyl' | 'cd' | 'merch';
+  stock: number;
 }
 
 export interface CartItem extends Product {

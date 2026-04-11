@@ -17,8 +17,11 @@ const cartSlice = createSlice({
     addToCart: (state, action: PayloadAction<Product>) => {
       const existingItem = state.items.find(item => item.id === action.payload.id);
       if (existingItem) {
+        // Khi đã tồn tại, chỉ tăng quantity, không kiểm tra stock ở đây
+        // (Stock được kiểm tra và giảm trước khi dispatch addToCart)
         existingItem.quantity += 1;
       } else {
+        // Khi thêm mới, luôn cho phép add (stock đã được kiểm tra từ component)
         state.items.push({ ...action.payload, quantity: 1 });
       }
     },
